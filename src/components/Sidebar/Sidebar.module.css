@@ -1,0 +1,32 @@
+.sidebar {
+  background-color: lightgreen;
+  height: 100%;
+  padding: 1rem;
+  overflow-y: auto;
+  width: 100%;
+  transition: all 10s;
+}
+
+.sidebar ul {
+  list-style: none;
+}
+.sidebar ul li {
+  padding: .5rem 0;
+  line-height: 1.5rem;
+  font-size: 1.25rem;
+}
+
+.sidebar ul li a:hover {
+  color: coral;
+  font-weight: bold;
+}
+
+.sidebar ul li::before {
+  display: inline-block;
+  content: " ";
+  height: 8px;
+  width: 8px;
+  background-color: lightcoral;
+  margin-right: 8px;
+  margin-bottom: 4px;
+}

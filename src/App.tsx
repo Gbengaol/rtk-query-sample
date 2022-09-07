@@ -1,56 +1,36 @@
-import { useState } from "react";
-import { addTodos, deleteTodo } from "./store/slices/todosSlice";
-import { selectTodos } from "./store/selectors/todosSelectors";
-import { useActions, useTypedSelector } from "./hooks/custom-hooks/redux-hooks";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Canvas } from "./pages/canvas";
+import UsersLanding from "./pages/auth/Users";
+import User from "./pages/auth/Users/user";
+import Dashboard from "./pages/auth/Dashboard/Dashboard";
+import Users from "./pages/auth/Users/users";
+import Index from "./pages/auth";
+import Docs from './pages/auth/Docs/Docs';
+import Settings from "./pages/auth/Settiings/Settings";
 
-function App() {
-  const [todoItem, setTodoItem] = useState("");
-  const todos = useTypedSelector(selectTodos);
-  const dispatch = useActions();
-
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const newTodoItem = {
-      text: todoItem,
-      id: Date.now(),
-    };
-    dispatch(addTodos(newTodoItem));
-    setTodoItem("");
-  };
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTodoItem(e.target.value);
-  };
-  const deleteTodoItem = (id: number) => {
-    return () => dispatch(deleteTodo(id));
-  };
+export default function App() {
   return (
-    <div>
-      <form onSubmit={onSubmit}>
-        <label htmlFor="todo-item">Todo Item</label>
-        <input
-          type="text"
-          name="text"
-          id="todo-item"
-          required
-          onChange={onChange}
-          value={todoItem}
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Canvas />} />
+        <Route path="dashboard" element={<Index />}>
+          <Route path="" element={<Dashboard />} />
+          <Route path="users" element={<UsersLanding />}>
+            <Route path="" element={<Users />} />
+            <Route path=":id" element={<User />} />
+          </Route>
+          <Route path="docs" element={<Docs />} />
+          <Route path="settings" element={<Settings />} />
+        </Route>
+        <Route
+          path="*"
+          element={
+            <main style={{ padding: "1rem" }}>
+              <p>There's nothing here!</p>
+            </main>
+          }
         />
-
-        <button type="submit">Add todo</button>
-      </form>
-
-      <hr />
-      <h4>Todo Items</h4>
-      <ul>
-        {todos?.map((todo) => (
-          <li key={todo.id}>
-            {todo.text} -{" "}
-            <button onClick={deleteTodoItem(todo.id)}>Delete Item</button>
-          </li>
-        ))}
-      </ul>
-    </div>
+      </Routes>
+    </BrowserRouter>
   );
 }
-
-export default App;

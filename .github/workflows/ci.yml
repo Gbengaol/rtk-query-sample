@@ -1,0 +1,52 @@
+name: CI
+on: [pull_request]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      CI: true
+      NODE_ENV: development
+    steps:
+      - name: Cancel running workflows in same branch
+        uses: styfle/cancel-workflow-action@0.9.1
+        with:
+          ignore_sha: true
+          all_but_latest: true
+          access_token: ${{ github.token }}
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "~16.10"
+          cache: "npm"
+          cache-dependency-path: "**/package-lock.json"
+      - uses: actions/cache@v2
+        with:
+          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
+          path: "**/node_modules"
+          restore-keys: |
+            ${{ runner.os }}-npm-
+      - run: npm install
+      - name: Cancel workflow
+        if: ${{ failure() }}
+        uses: andymckay/cancel-action@0.2
+  test:
+    runs-on: ubuntu-latest
+    needs: build
+    env:
+      CI: true
+      NODE_ENV: development
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "~16.10"
+          cache: "npm"
+          cache-dependency-path: "**/package-lock.json"
+      - uses: actions/cache@v2
+        with:
+          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
+          path: "**/node_modules"
+          restore-keys: |
+            ${{ runner.os }}-npm-
+      - name: Run tests
+        run: npm test

@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-type TTodo = {
+export type TTodo = {
   id: number;
   text: string;
 };
@@ -24,6 +24,12 @@ export const todosSlice = createSlice({
       state.todos = [
         ...state.todos.filter((todo) => todo.id !== action.payload),
       ];
+    },
+    updateTodo: (state, action: PayloadAction<TTodo>) => {
+      const newTodoIndex = state.todos.findIndex(
+        (todo) => todo.id === action.payload.id
+      );
+      state.todos[newTodoIndex] = action.payload;
     },
   },
 });

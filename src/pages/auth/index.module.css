@@ -1,0 +1,29 @@
+.alignModule {
+  display: grid;
+  grid-template-columns: 1fr 4fr;
+  height: 100vh;
+}
+
+.alignModule.no-side {
+  grid-template-columns: 1fr;
+}
+
+.alignModule .innerPages {
+  background-color: lightgrey;
+  overflow-y: auto;
+  position: relative;
+}
+
+.alignModule .innerPages .children {
+  width: 100%;
+  padding: 1.25rem;
+}
+
+@media screen and (max-width: 991px) {
+  .alignModule .innerPages {
+    background-color: #f5f5f5;
+  }
+  .alignModule .innerPages .children {
+    padding: 2.5rem;
+  }
+}
